@@ -1,0 +1,21 @@
+# Ignora os arquivos da pasta dados
+**/data/*.*
+
+# Ignora os arquivos da pasta tests
+**/tests/*.*
+
+# Ignora o arquivo .env e arquivos teste.*
+**/bank_marketing/.env
+**/bank_marketing/teste.*
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
