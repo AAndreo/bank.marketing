@@ -120,7 +120,35 @@ class Eda_lib:
     def _frequencia_cat(self, coluna: str) -> pd.DataFrame:
         data = self.dataframe[coluna].agg(['value_counts',lambda x : (x.value_counts() / self.dataframe.shape[0])*100]).reset_index().rename(columns={'index':coluna,'value_counts':'frequencia', '<lambda>':'porcentagem'})
         return data.sort_values(by='porcentagem', ascending=True)
-     
+
+    def taxa_resposta(self, var_categorica: str, target: str) -> pd.DataFrame:
+        """Função retornar a taxa de resposta (média de y) entre os grupos de uma variavel categorica e a variável alvo.
+        dataframe : pandas dataframe 
+        var_categorica : pandas series : variável categórica do dataframe.
+        target : pandas series : variável alvo do dataframe.        
+        """
+
+        data = self.dataframe.groupby(by=var_categorica, as_index=False).agg(frequencia=(target, 'count'),
+                                                                                      taxa_resposta=(target, 'mean'))
+
+        return data.style.background_gradient(cmap=self.colormap, high=.5, subset=["taxa_resposta"])
+
+    def _freq_porcentagem_entre_grp_target(self, var_categorica: str, target: str) -> pd.DataFrame:
+        data = self.dataframe.groupby([var_categorica], as_index=False)[target].value_counts().rename(columns=({'count':'frequencia'}))
+        data['porcentagem'] = self.dataframe.groupby(by=var_categorica)[target].value_counts(normalize=True).values*100  
+        return data.sort_values(by=[var_categorica,target])
+
+    def freq_porcentagem_entre_grp_target(self, var_categorica: str, target: str) -> pd.DataFrame:
+        """Função para agrupar as variaveis categoricas de interesse e retornar um dataframe.
+        dataframe : pandas dataframe 
+        var_categorica : pandas series : variável categórica do dataframe.
+        target : pandas series : variável alvo do dataframe.        
+        """
+        data = self.dataframe.groupby([var_categorica], as_index=False)[target].value_counts().rename(columns=({'count':'frequencia'}))
+        data['porcentagem'] = self.dataframe.groupby(by=var_categorica)[target].value_counts(normalize=True).values*100  
+
+        return data.sort_values(by=[var_categorica,target]).style.background_gradient(cmap='mako_r', high=.5, subset=["porcentagem"])
+
     def shapiro_test(self, coluna: str)-> None:
         # Teste de Normalidade dos dados.
         # H0: Os dados são normais.
@@ -262,6 +290,50 @@ class Eda_lib:
         sns.despine()
         plt.show()
         return None
+
+    def plot_freq_porcentagem_entre_grp_target(self, var_categorica: str, target: str, xlabel: str=np.nan, title: str=np.nan, orient: str='v') -> None:
+        """
+        Plota um gráfico com as frequências e porcentagens das categorias de uma determinada coluna
+        :param dataframe : pandas dataframe 
+        :param var_categorica: Coluna do dataframe que possue as categorias
+        :param target: Coluna do dataframe alvo
+        :param xlabel: label do eixo X
+        :param title: Título do gráfico 
+        """
+        if pd.isna(xlabel):
+            xlabel = var_categorica
+
+        if pd.isna(title):
+            title = 'Porcentagem entre os grupos de ' + var_categorica + ' e ' + target
+
+        data = self._freq_porcentagem_entre_grp_target(var_categorica=var_categorica, target=target)
+
+        plt.figure(figsize=(8,4))
+
+        if str.lower(orient) == 'v':
+            ax = sns.histplot(data=data, x=var_categorica, hue=target,  multiple='stack', palette=self.palette, weights='porcentagem', shrink=0.9)
+            plt.xticks(rotation=45, fontsize=8)
+            ax.set_ylabel('%')
+            legend = ax.get_legend()
+            legend.set_bbox_to_anchor((1, 1))
+
+            for container in ax.containers:
+                ax.bar_label(container, labels = [f'{v.get_height():.2f}%' if v.get_height() > 0 else '' for v in container], label_type='center', fontsize=8)
+
+        elif str.lower(orient) == 'h':
+            ax = sns.histplot(data=data, y=var_categorica, hue=target,  multiple='stack', palette=self.palette, weights='porcentagem', shrink=0.9)
+            plt.xticks(rotation=45, fontsize=8)
+            ax.set_xlabel('%')
+            legend = ax.get_legend()
+            legend.set_bbox_to_anchor((1, 1))
+
+            for container in ax.containers:
+                ax.bar_label(container, labels = [f'{v.get_width():.2f}%' if v.get_width() > 0 else '' for v in container], label_type='center', fontsize=8)
+
+        plt.title(title)
+        sns.despine()
+        plt.show()
+        return None
     
     def plot_boxplot(self, coluna:str, target:str, orient: str='v') -> None:
         fig, ax = plt.subplots(figsize=(8,4),dpi=75)
@@ -323,8 +395,6 @@ class Eda_lib:
         col_corr = set()  # Set das colunas correlacionadas
         col_colinearidade = []
         col_ant = []
-
-        # vars = self.dataframe.drop(columns=[target]).select_dtypes(include='number')
 
         for i in vars:
             for j in vars:
