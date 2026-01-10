@@ -127,7 +127,6 @@ class Eda_lib:
         var_categorica : pandas series : variável categórica do dataframe.
         target : pandas series : variável alvo do dataframe.        
         """
-
         data = self.dataframe.groupby(by=var_categorica, as_index=False).agg(frequencia=(target, 'count'),
                                                                                       taxa_resposta=(target, 'mean'))
 
@@ -147,7 +146,7 @@ class Eda_lib:
         data = self.dataframe.groupby([var_categorica], as_index=False)[target].value_counts().rename(columns=({'count':'frequencia'}))
         data['porcentagem'] = self.dataframe.groupby(by=var_categorica)[target].value_counts(normalize=True).values*100  
 
-        return data.sort_values(by=[var_categorica,target]).style.background_gradient(cmap='mako_r', high=.5, subset=["porcentagem"])
+        return data.sort_values(by=[var_categorica,target]).style.background_gradient(cmap='mako_r', high=.5, subset=["frequencia"])
 
     def shapiro_test(self, coluna: str)-> None:
         # Teste de Normalidade dos dados.
@@ -291,6 +290,15 @@ class Eda_lib:
         plt.show()
         return None
 
+    def plot_boxplot(self, var_numerica:str, var_categorica:str) -> None:
+        fig, ax = plt.subplots(figsize=(16,8),dpi=75)
+        # sns.boxplot(data=self._dataframe, x=coluna, y=target, hue=coluna, palette=self.palette)
+        sns.boxplot(data=self.dataframe, x=var_categorica, y=var_numerica, hue=var_categorica, palette=self.palette,
+                    meanprops={'marker' : 'D', 'markeredgecolor' : 'black', 'markersize' : 6},
+                    showmeans=True, showfliers=True, showbox=True, showcaps=True, fill=True, linecolor='k')        
+        plt.title('Comparação entre grupos')
+        return None
+    
     def plot_freq_porcentagem_entre_grp_target(self, var_categorica: str, target: str, xlabel: str=np.nan, title: str=np.nan, orient: str='v') -> None:
         """
         Plota um gráfico com as frequências e porcentagens das categorias de uma determinada coluna
@@ -304,44 +312,33 @@ class Eda_lib:
             xlabel = var_categorica
 
         if pd.isna(title):
-            title = 'Porcentagem entre os grupos de ' + var_categorica + ' e ' + target
-
-        data = self._freq_porcentagem_entre_grp_target(var_categorica=var_categorica, target=target)
-
+            title = 'Frequência entre os grupos de ' + var_categorica + ' e ' + target
+      
         plt.figure(figsize=(8,4))
 
         if str.lower(orient) == 'v':
-            ax = sns.histplot(data=data, x=var_categorica, hue=target,  multiple='stack', palette=self.palette, weights='porcentagem', shrink=0.9)
+            ax = sns.countplot(data=self.dataframe, x=var_categorica, hue=target, palette=self.palette, gap=0.1, dodge=True)            
             plt.xticks(rotation=45, fontsize=8)
-            ax.set_ylabel('%')
+            ax.set_ylabel('frequência')
             legend = ax.get_legend()
             legend.set_bbox_to_anchor((1, 1))
 
             for container in ax.containers:
-                ax.bar_label(container, labels = [f'{v.get_height():.2f}%' if v.get_height() > 0 else '' for v in container], label_type='center', fontsize=8)
+                ax.bar_label(container, labels = [f'{v.get_height():.0f}' if v.get_height() > 0 else '' for v in container], label_type='edge', fontsize=8)
 
         elif str.lower(orient) == 'h':
-            ax = sns.histplot(data=data, y=var_categorica, hue=target,  multiple='stack', palette=self.palette, weights='porcentagem', shrink=0.9)
+            ax = sns.countplot(data=self.dataframe, y=var_categorica, hue=target, palette=self.palette, gap=0.1, dodge=True)            
             plt.xticks(rotation=45, fontsize=8)
-            ax.set_xlabel('%')
+            ax.set_xlabel('frequência')
             legend = ax.get_legend()
             legend.set_bbox_to_anchor((1, 1))
 
             for container in ax.containers:
-                ax.bar_label(container, labels = [f'{v.get_width():.2f}%' if v.get_width() > 0 else '' for v in container], label_type='center', fontsize=8)
+                ax.bar_label(container, labels = [f'{v.get_width():.0f}' if v.get_width() > 0 else '' for v in container], label_type='edge', fontsize=8)
 
         plt.title(title)
         sns.despine()
         plt.show()
-        return None
-    
-    def plot_boxplot(self, coluna:str, target:str, orient: str='v') -> None:
-        fig, ax = plt.subplots(figsize=(8,4),dpi=75)
-        # sns.boxplot(data=self._dataframe, x=coluna, y=target, hue=coluna, palette=self.palette)
-        sns.boxplot(data=self.dataframe, x=coluna, y=target, hue=coluna, palette=self.palette,
-                    meanprops={'marker' : 'D', 'markeredgecolor' : 'black', 'markersize' : 6},
-                    showmeans=True, showfliers=True, showbox=True, showcaps=True, fill=True, linecolor='k')        
-        plt.title('Comparação entre grupos')
         return None
     
     def plot_IC95(self, model)-> None:

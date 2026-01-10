@@ -45,5 +45,5 @@ def teste_chi2(dataframe: pd.DataFrame, var_categorica1: str , var_categorica2: 
         print(f"- p_valor: {p_valor:.10f} < alpha: {alpha} => Rejeitamos a hipótese nula. Existe associação entre as variáveis {var_categorica1} e {var_categorica2}.")
         print(f"- Tamanho do Efeito - Cramér´s V: {contingency.association(table,method='cramer'):.10f}")        
     else:
-        print(f"- p_valor: {p_valor:.10f} > alpha: {alpha} => Não rejeitamos a hipótese nula. Não existe associação entre as variáveis {var_categorica1} e {var_categorica2}")
+        print(f"- p_valor: {p_valor:.10f} > alpha: {alpha} => Não rejeitamos a hipótese nula. Não existe associação entre as variáveis {var_categorica1} e {var_categorica2}.")
         print(f"- Tamanho do Efeito - Cramér´s V: {contingency.association(table,method='cramer'):.10f}")   
