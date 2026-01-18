@@ -17,7 +17,7 @@ O objetivo da classificação é prever se o cliente irá assinar (sim/não) um 
 Aqui esta nosso [projeto completo](bank_marketing/eda.ipynb).
 
 ## Qual é a história que os dados nos contaram?
-- Com a interpretação das Odds Ratios, chegamos a essas conclusões:
+- ### Com a interpretação das Odds Ratios, chegamos a essas conclusões:
 
     - Clientes com ensino secundário tem 22% menos chance de assinar um depósito a prazo do que clientes com ensino ensino superior ou desconhecido.
     - Clientes com ensino primário tem 34,86% menos chance de assinar um depósito a prazo do que clientes com ensino ensino superior ou desconhecido.
@@ -35,25 +35,21 @@ Aqui esta nosso [projeto completo](bank_marketing/eda.ipynb).
     - Para cada aumento de uma unidade no número de contatos realizados durante essa campanha, a chance do cliente assinar um depósito a prazo diminuem 5,92%, mantendo constantes as demais variáveis.
     - Para cada aumento de uma unidade na duração do ultimo contato, em segundos, a chance do cliente assinar um depósito a prazo aumenta em 0,4%, mantendo constantes as demais variáveis.
 
-    ### Qual é a qualidade do nosso modelo para cenários diferentes?
+## Qual é a qualidade do nosso modelo para cenários diferentes?
 
-    #### Primeiro cenário - Objetivo Decisão
-- A empresa decidiu que probabilidades maiores que 0.5 (p_chapeu > 0.5) serão considerados como casos que o cliente assinou um depósito a prazo (1), caso contrário não assinou (0).
+- ### Primeiro cenário - Objetivo Decisão
+    - A empresa decidiu que probabilidades maiores que 0.5 (p_chapeu > 0.5) serão considerados como casos que o cliente assinou um depósito a prazo (1), caso contrário não assinou (0).
+    - O volume de clientes para esse cenário é de 240 clientes assinaram o depósito a prazo (1) e 4281 clientes não assinaram o depósito a prazo (0).
+    - Baseado no resultado da precisão de corte de 0.5, de todos os clientes que o modelo disse que vão assinar o depósito a prazo, o acerto foi de 66,25%, e de todos os clientes que realmente assinaram o depósito a prazo, o modelo teve exito de 30,52% no alcance.
 
-- O volume de clientes para esse cenário é de 240 clientes assinaram o depósito a prazo (1) e 4281 clientes não assinaram o depósito a prazo (0).
+* ### Segundo cenário - Objetivo estimação
+    - A empresa gostaria de saber, qual a esperança de valores de depositos a prazo receberia na próxima campanha?
+    - O volume de clientes para esse cenário é de 521 clientes assinaram o depósito a prazo (1) e 4000 clientes não assinaram o depósito a prazo (0).
+    - Vamos assumir que o valor médio dos depósitos a prazo seja de 775 euros.
+    - A esperança de valores de depósitos a prazo atráves do modelo seria de 403775.00 euros.
 
-- Baseado no resultado da precisão de corte de 0.5, de todos os clientes que o modelo disse que vão assinar o depósito a prazo, o acerto foi de 66,25%, e de todos os clientes que realmente assinaram o depósito a prazo, o modelo teve exito de 30,52% no alcance.
-
-    #### Segundo cenário - Objetivo estimação
-- A empresa gostaria de saber, qual a esperança de valores de depositos a prazo receberia na próxima campanha?
-
-- O volume de clientes para esse cenário é de 521 clientes assinaram o depósito a prazo (1) e 4000 clientes não assinaram o depósito a prazo (0).
-- Vamos assumir que o valor médio dos depósitos a prazo seja de 775 euros.
-- A esperança de valores de depósitos a prazo atráves do modelo seria de 403775.00 euros.
-
-    #### Terceiro cenário - Objetivo ordenação
-- A empresa gostaria de atuar de uma forma mais ativa numa próxima campanha, nos 20% dos clientes com maior probabilidade de assinar um depósito a prazo.
-
-- Restrição de negócio: capacidade de atuar em somente 20% dos clientes.
-- Se a empresa não utilizar o modelo, terá que selecionar os clientes de forma aleatória e tera um retorno de 11,52%, ou seja, de todos os clientes abordados, somente 11,52% deles assinariam um depósito a prazo.
-- Utilizando o modelo, dentro da restrição de 20% da operação, consegue-se trazer um retorno 261,48% maior do que não ter o modelo.
+* ### Terceiro cenário - Objetivo ordenação
+    - A empresa gostaria de atuar de uma forma mais ativa numa próxima campanha, nos 20% dos clientes com maior probabilidade de assinar um depósito a prazo.
+    - Restrição de negócio: capacidade de atuar em somente 20% dos clientes.
+    - Se a empresa não utilizar o modelo, terá que selecionar os clientes de forma aleatória e tera um retorno de 11,52%, ou seja, de todos os clientes abordados, somente 11,52% deles assinariam um depósito a prazo.
+    - Utilizando o modelo, dentro da restrição de 20% da operação, consegue-se trazer um retorno 261,48% maior do que não ter o modelo.
