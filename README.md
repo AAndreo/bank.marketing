@@ -14,6 +14,8 @@ O objetivo da classificação é prever se o cliente irá assinar (sim/não) um 
 - ordenação
 - estimação
 
+Aqui esta nosso [projeto completo](bank_marketing/eda.ipynb).
+
 ### Qual é a história que os dados nos contaram?
 - Com a interpretação das Odds Ratios, chegamos a essas conclusões:
 
