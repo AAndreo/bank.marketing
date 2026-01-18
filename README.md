@@ -5,10 +5,10 @@
 ## Contexto
 Descubra as melhores estratégias para aprimorar a próxima campanha de marketing. Como a instituição financeira pode aumentar a eficácia de suas futuras campanhas de marketing? Para responder a essa pergunta, precisamos analisar a última campanha de marketing realizada pelo banco e identificar os padrões que nos ajudarão a chegar a conclusões para o desenvolvimento de estratégias futuras.
 
-### Nossos dados
+## Nossos dados
 Os dados estão relacionados com campanhas de marketing direto de uma instituição bancária portuguesa. As campanhas de marketing baseavam-se em chamadas telefónicas. Muitas vezes, era necessário mais do que um contato com o mesmo cliente, para apurar se o produto (depósito a prazo bancário) seria ('sim') ou não ('não') assinado.
 
-### O que precisa ser feito?
+## O que precisa ser feito?
 O objetivo da classificação é prever se o cliente irá assinar (sim/não) um depósito a prazo (variável y) e apresentar um modelo de regressão logística avaliando sua qualidade em diferentes tipos de objetivo : 
 - decisão
 - ordenação
@@ -16,7 +16,7 @@ O objetivo da classificação é prever se o cliente irá assinar (sim/não) um 
 
 Aqui esta nosso [projeto completo](bank_marketing/eda.ipynb).
 
-### Qual é a história que os dados nos contaram?
+## Qual é a história que os dados nos contaram?
 - Com a interpretação das Odds Ratios, chegamos a essas conclusões:
 
     - Clientes com ensino secundário tem 22% menos chance de assinar um depósito a prazo do que clientes com ensino ensino superior ou desconhecido.
